@@ -1,18 +1,42 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Cell from "./Cell";
 import "./App.css";
 
+const BLINK_INTERVAL = 750;
+
 type GameState = "ready" | "started" | "over";
 
-function getRandNumber(): number {
-  return Math.floor(Math.random() * 4);
-}
+// function getRandNumber(): number {
+//   return Math.floor(Math.random() * 4);
+// }
 
 function App() {
   const [gameState, setGameState] = useState<GameState>("ready");
-  const [score, setScore] = useState(0);
-  // const [level, setLevel] = useState<number[]>([0, 1, 2]);
-  // const [isShowingLevel, setIsShowingLevel] = useState(false);
+  const [level, setLevel] = useState<number[]>([]);
+  const [isShowingLevel, setIsShowingLevel] = useState(false);
+  const [currentBlinking, setCurrentBlinking] = useState<number>(NaN);
+
+  useEffect(() => {
+    if (gameState !== "started") {
+      return;
+    }
+
+    setIsShowingLevel(true);
+    const levelSlice = level.slice();
+    const timer = setInterval(() => {
+      const curr = levelSlice.shift();
+
+      if (curr) {
+        setCurrentBlinking(curr);
+      }
+
+      if (levelSlice.length === 0) {
+        setCurrentBlinking(NaN);
+        setIsShowingLevel(false);
+        clearInterval(timer);
+      }
+    }, BLINK_INTERVAL);
+  }, [gameState, level]);
 
   return (
     <div className={`container-${gameState}`}>
@@ -29,7 +53,9 @@ function App() {
             return (
               <Cell
                 key={i}
-                activated={false}
+                pos={i}
+                isBlinking={currentBlinking === i}
+                isDisabled={isShowingLevel}
                 onClick={() => setGameState("over")}
               />
             );
@@ -37,7 +63,7 @@ function App() {
 
       {gameState === "over" && (
         <div className="game-over">
-          <div className="score">Score: {score}</div>
+          <div className="score">Score: {level.length}</div>
           <button className="end-btn" onClick={() => setGameState("ready")}>
             Try Again
           </button>

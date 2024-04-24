@@ -1,12 +1,22 @@
+import "./App.css";
+
 type CellProps = {
-  key: number;
-  activated: boolean;
+  pos: number;
+  isBlinking: boolean;
+  isDisabled: boolean;
   onClick: () => void;
 };
 
-function Cell(props: CellProps) {
+function Cell({ pos, isBlinking, isDisabled, onClick }: CellProps) {
+  console.log(pos);
   return (
-    <button key={props.key} className="cell" onClick={props.onClick}></button>
+    <button
+      className={[`cell--${pos}`, isBlinking && "cell--activated"]
+        .filter(Boolean)
+        .join(" ")}
+      disabled={isDisabled}
+      onClick={onClick}
+    ></button>
   );
 }
 
