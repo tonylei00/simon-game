@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import GameBtn from "./GameBtn";
 
 const colors = ["green", "red", "yellow", "blue"];
@@ -6,6 +6,7 @@ const colors = ["green", "red", "yellow", "blue"];
 export default function Game() {
   const [sequence, setSequence] = useState<string[]>([]);
   const [isPlaying, setIsPlaying] = useState(false);
+  // const [sequenceIdx, setSequenceIdx] = useState(0);
 
   const greenRef = useRef<HTMLButtonElement>(null);
   const redRef = useRef<HTMLButtonElement>(null);
@@ -24,9 +25,23 @@ export default function Game() {
     }
   };
 
+  const handleGameBtnClick = (e: React.MouseEvent) => {
+    setTimeout(() => {
+      if (e.target instanceof HTMLElement) {
+        e.target.classList.add("btn-pop");
+      }
+
+      setTimeout(() => {
+        if (e.target instanceof HTMLElement) {
+          e.target.classList.remove("btn-pop");
+        }
+      }, 250);
+    }, 0);
+  };
+
   useEffect(() => {
     const displaySequence = (idx = 0) => {
-      let ref: React.RefObject<HTMLButtonElement> | null = null;
+      let ref: React.RefObject<HTMLButtonElement>;
 
       switch (sequence[idx]) {
         case "green":
@@ -43,27 +58,18 @@ export default function Game() {
           break;
       }
 
-      // if (sequence[idx] === "green") {
-      //   ref = greenRef;
-      // }
-      // if (sequence[idx] === "red") {
-      //   ref = redRef;
-      // }
-      // if (sequence[idx] === "yellow") {
-      //   ref = yellowRef;
-      // }
-      // if (sequence[idx] === "blue") {
-      //   ref = blueRef;
-      // }
-
       setTimeout(() => {
         if (ref?.current) {
-          ref?.current.classList.add("btn-brighten");
+          ref?.current.classList.add("btn-pop");
         }
 
         setTimeout(() => {
           if (ref?.current) {
-            ref?.current.classList.remove("btn-brighten");
+            ref?.current.classList.remove("btn-pop");
+          }
+
+          if (idx < sequence.length - 1) {
+            displaySequence(idx + 1);
           }
         }, 250);
       }, 250);
@@ -75,23 +81,40 @@ export default function Game() {
   return (
     <div className="game-container">
       <div>
-        <GameBtn backgroundStyle="green" ref={greenRef} />
-        <GameBtn backgroundStyle="red" ref={redRef} />
+        <GameBtn
+          backgroundStyle="green"
+          ref={greenRef}
+          onClick={handleGameBtnClick}
+        />
+        <GameBtn
+          backgroundStyle="red"
+          ref={redRef}
+          onClick={handleGameBtnClick}
+        />
       </div>
 
       <div>
-        <GameBtn backgroundStyle="blue" ref={blueRef} />
-        <GameBtn backgroundStyle="yellow" ref={yellowRef} />
+        <GameBtn
+          backgroundStyle="blue"
+          ref={blueRef}
+          onClick={handleGameBtnClick}
+        />
+        <GameBtn
+          backgroundStyle="yellow"
+          ref={yellowRef}
+          onClick={handleGameBtnClick}
+        />
       </div>
 
       <button
         className="play-btn"
         onClick={() => {
+          // setIsPlaying(true);
           handleNextLevel();
-          setIsPlaying(true);
         }}
+        disabled={isPlaying}
       >
-        {isPlaying ? "" : "Play"}
+        Play
       </button>
     </div>
   );

@@ -1,13 +1,17 @@
-import { forwardRef } from "react";
+import React, { forwardRef } from "react";
 
 type GameBtnProps = {
   backgroundStyle: string;
-  isDisabled?: boolean;
+  onClick: (e: React.MouseEvent) => void;
 };
 
 const GameBtn = forwardRef<HTMLButtonElement, GameBtnProps>(
-  ({ backgroundStyle }, ref) => (
-    <button className={`game-btn ${backgroundStyle}`} ref={ref} />
+  ({ backgroundStyle, onClick }, ref) => (
+    <button
+      className={`game-btn ${backgroundStyle}`}
+      ref={ref}
+      onClick={onClick}
+    />
   )
 );
 

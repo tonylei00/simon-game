@@ -17,9 +17,9 @@ button:hover {
   border-style: none;
 }
 
-.game-btn:hover {
+/* .game-btn:hover {
   scale: 105%;
-}
+} */
 
 .green {
   background-color: green;
@@ -54,9 +54,11 @@ button:hover {
 }
 
 .play-btn:hover {
-  scale: 105%;
+  font-size: 40px;
 }
 
-.btn-brighten {
-  filter: brightness(5);
+.btn-pop {
+  /* -webkit-filter: brightness(2); */
+  /* filter: brightness(2); */
+  scale: 105%;
 }
