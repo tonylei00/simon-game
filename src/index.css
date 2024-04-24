@@ -3,9 +3,6 @@ body {
   display: flex;
   place-items: center;
   justify-content: center;
+  background-color: rgb(53, 55, 56);
   min-height: 100vh;
-}
-
-button:hover {
-  cursor: pointer;
 }
