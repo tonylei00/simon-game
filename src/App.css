@@ -59,6 +59,18 @@ button:hover {
 
 .btn-pop {
   /* -webkit-filter: brightness(2); */
-  /* filter: brightness(2); */
+  filter: brightness(2);
   scale: 105%;
+}
+
+.score {
+  position: absolute;
+  border-style: none;
+  background-color: rgb(53, 55, 56);
+  color: white;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 30px;
 }

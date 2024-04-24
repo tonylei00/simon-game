@@ -1,12 +1,21 @@
 import React, { useEffect, useState, useRef } from "react";
 import GameBtn from "./GameBtn";
 
-const colors = ["green", "red", "yellow", "blue"];
+const COLORS = ["green", "red", "yellow", "blue"];
+
+type GameState = "start" | "playing" | "over";
+type ButtonRef = React.RefObject<HTMLButtonElement>;
+
+/*
+  TODO:
+    - Add game reset functionality
+    - Set center element depending on game state
+*/
 
 export default function Game() {
   const [sequence, setSequence] = useState<string[]>([]);
-  const [isPlaying, setIsPlaying] = useState(false);
-  // const [sequenceIdx, setSequenceIdx] = useState(0);
+  const [gameState, setGameState] = useState<GameState>("start");
+  const [playIdx, setPlayIdx] = useState(0);
 
   const greenRef = useRef<HTMLButtonElement>(null);
   const redRef = useRef<HTMLButtonElement>(null);
@@ -14,15 +23,23 @@ export default function Game() {
   const blueRef = useRef<HTMLButtonElement>(null);
 
   const addNewColor = () => {
-    const color = colors[Math.floor(Math.random() * colors.length)];
+    const color = COLORS[Math.floor(Math.random() * COLORS.length)];
     const newSequence = [...sequence, color];
     setSequence(newSequence);
   };
 
   const handleNextLevel = () => {
-    if (!isPlaying) {
+    if (gameState == "start") {
       addNewColor();
     }
+  };
+
+  const userInputtedCorrectColor = (color: string): boolean => {
+    return sequence[playIdx] === color;
+  };
+
+  const userSuccessfullyInputsSequence = (): boolean => {
+    return playIdx === sequence.length - 1;
   };
 
   const handleGameBtnClick = (e: React.MouseEvent) => {
@@ -35,13 +52,35 @@ export default function Game() {
         if (e.target instanceof HTMLElement) {
           e.target.classList.remove("btn-pop");
         }
+
+        let colorClicked: string | undefined;
+        if (e.target instanceof HTMLElement) {
+          colorClicked = e.target.id;
+        } else {
+          throw new Error("color not found");
+        }
+
+        if (userInputtedCorrectColor(colorClicked)) {
+          if (userSuccessfullyInputsSequence()) {
+            setTimeout(() => {
+              addNewColor();
+              setPlayIdx(0);
+            }, 250);
+          } else {
+            // Sequenced not finished
+            setPlayIdx(playIdx + 1);
+          }
+        } else {
+          // setGameState("over");
+          // resetGame();
+        }
       }, 250);
     }, 0);
   };
 
   useEffect(() => {
     const displaySequence = (idx = 0) => {
-      let ref: React.RefObject<HTMLButtonElement>;
+      let ref: ButtonRef;
 
       switch (sequence[idx]) {
         case "green":
@@ -81,40 +120,24 @@ export default function Game() {
   return (
     <div className="game-container">
       <div>
-        <GameBtn
-          backgroundStyle="green"
-          ref={greenRef}
-          onClick={handleGameBtnClick}
-        />
-        <GameBtn
-          backgroundStyle="red"
-          ref={redRef}
-          onClick={handleGameBtnClick}
-        />
+        <GameBtn id="green" ref={greenRef} onClick={handleGameBtnClick} />
+        <GameBtn id="red" ref={redRef} onClick={handleGameBtnClick} />
       </div>
 
       <div>
-        <GameBtn
-          backgroundStyle="blue"
-          ref={blueRef}
-          onClick={handleGameBtnClick}
-        />
-        <GameBtn
-          backgroundStyle="yellow"
-          ref={yellowRef}
-          onClick={handleGameBtnClick}
-        />
+        <GameBtn id="blue" ref={blueRef} onClick={handleGameBtnClick} />
+        <GameBtn id="yellow" ref={yellowRef} onClick={handleGameBtnClick} />
       </div>
 
       <button
-        className="play-btn"
+        className={gameState !== "playing" ? "play-btn" : "score"}
         onClick={() => {
-          // setIsPlaying(true);
+          setGameState("playing");
           handleNextLevel();
         }}
-        disabled={isPlaying}
+        disabled={gameState !== "playing"}
       >
-        Play
+        {gameState !== "playing" ? "Play" : `Score: ${sequence.length - 1}`}
       </button>
     </div>
   );
