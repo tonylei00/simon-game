@@ -41,7 +41,7 @@ button:hover {
   border-bottom-right-radius: 100%;
 }
 
-.play-btn {
+.center-circle {
   position: absolute;
   border-style: none;
   background-color: rgb(53, 55, 56);
@@ -51,26 +51,35 @@ button:hover {
   border-radius: 50%;
   font-weight: bold;
   font-size: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-pop {
+  /* -webkit-filter: brightness(2); */
+  /* filter: brightness(2); */
+  scale: 105%;
+}
+
+.play-btn {
+  border-style: none;
+  background-color: rgb(53, 55, 56);
+  color: white;
+  font-size: 30px;
+  font-weight: bold;
 }
 
 .play-btn:hover {
   font-size: 40px;
 }
 
-.btn-pop {
-  /* -webkit-filter: brightness(2); */
-  filter: brightness(2);
-  scale: 105%;
-}
-
-.score {
-  position: absolute;
-  border-style: none;
-  background-color: rgb(53, 55, 56);
-  color: white;
-  width: 300px;
-  height: 300px;
-  border-radius: 50%;
+.try-again-btn {
+  border: 1px solid white;
+  border-radius: 10px;
+  padding: 5px 10px;
+  background-color: white;
+  color: rgb(53, 55, 56);
+  font-size: 20px;
   font-weight: bold;
-  font-size: 30px;
 }

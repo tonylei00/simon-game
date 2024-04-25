@@ -6,15 +6,9 @@ const COLORS = ["green", "red", "yellow", "blue"];
 type GameState = "start" | "playing" | "over";
 type ButtonRef = React.RefObject<HTMLButtonElement>;
 
-/*
-  TODO:
-    - Add game reset functionality
-    - Set center element depending on game state
-*/
-
 export default function Game() {
   const [sequence, setSequence] = useState<string[]>([]);
-  const [gameState, setGameState] = useState<GameState>("start");
+  const [gameState, setGameState] = useState<GameState>("over");
   const [playIdx, setPlayIdx] = useState(0);
 
   const greenRef = useRef<HTMLButtonElement>(null);
@@ -32,6 +26,12 @@ export default function Game() {
     if (gameState == "start") {
       addNewColor();
     }
+  };
+
+  const resetGame = () => {
+    setGameState("start");
+    setSequence([]);
+    setPlayIdx(0);
   };
 
   const userInputtedCorrectColor = (color: string): boolean => {
@@ -71,8 +71,7 @@ export default function Game() {
             setPlayIdx(playIdx + 1);
           }
         } else {
-          // setGameState("over");
-          // resetGame();
+          setGameState("over");
         }
       }, 250);
     }, 0);
@@ -129,16 +128,30 @@ export default function Game() {
         <GameBtn id="yellow" ref={yellowRef} onClick={handleGameBtnClick} />
       </div>
 
-      <button
-        className={gameState !== "playing" ? "play-btn" : "score"}
-        onClick={() => {
-          setGameState("playing");
-          handleNextLevel();
-        }}
-        disabled={gameState !== "playing"}
-      >
-        {gameState !== "playing" ? "Play" : `Score: ${sequence.length - 1}`}
-      </button>
+      <div className="center-circle">
+        {gameState === "start" && (
+          <button
+            className="play-btn"
+            onClick={() => {
+              setGameState("playing");
+              handleNextLevel();
+            }}
+          >
+            Play
+          </button>
+        )}
+
+        {(gameState === "playing" || gameState === "over") && (
+          <div>
+            <div className="score">Score: {sequence.length - 1}</div>
+            {gameState === "over" && (
+              <button className="try-again-btn" onClick={resetGame}>
+                Try Again
+              </button>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
