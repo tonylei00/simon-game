@@ -8,7 +8,7 @@ type ButtonRef = React.RefObject<HTMLButtonElement>;
 
 export default function Game() {
   const [sequence, setSequence] = useState<string[]>([]);
-  const [gameState, setGameState] = useState<GameState>("over");
+  const [gameState, setGameState] = useState<GameState>("start");
   const [playIdx, setPlayIdx] = useState(0);
 
   const greenRef = useRef<HTMLButtonElement>(null);
