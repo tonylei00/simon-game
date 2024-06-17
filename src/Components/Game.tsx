@@ -3,12 +3,16 @@ import GameBtn from "./GameBtn";
 
 const COLORS = ["green", "red", "yellow", "blue"];
 
-type GameState = "start" | "playing" | "over";
+const START = "start";
+const PLAYING = "playing";
+const OVER = "over";
+
+type GameState = typeof START | typeof PLAYING | typeof OVER;
 type ButtonRef = React.RefObject<HTMLButtonElement>;
 
 export default function Game() {
   const [sequence, setSequence] = useState<string[]>([]);
-  const [gameState, setGameState] = useState<GameState>("start");
+  const [gameState, setGameState] = useState<GameState>(START);
   const [playIdx, setPlayIdx] = useState(0);
 
   const greenRef = useRef<HTMLButtonElement>(null);
@@ -23,13 +27,13 @@ export default function Game() {
   };
 
   const handleNextLevel = () => {
-    if (gameState == "start") {
+    if (gameState == START) {
       addNewColor();
     }
   };
 
   const resetGame = () => {
-    setGameState("start");
+    setGameState(START);
     setSequence([]);
     setPlayIdx(0);
   };
@@ -71,7 +75,7 @@ export default function Game() {
             setPlayIdx(playIdx + 1);
           }
         } else {
-          setGameState("over");
+          setGameState(OVER);
         }
       }, 250);
     }, 0);
@@ -129,11 +133,11 @@ export default function Game() {
       </div>
 
       <div className="center-circle">
-        {gameState === "start" && (
+        {gameState === START && (
           <button
             className="play-btn"
             onClick={() => {
-              setGameState("playing");
+              setGameState(PLAYING);
               handleNextLevel();
             }}
           >
@@ -141,10 +145,10 @@ export default function Game() {
           </button>
         )}
 
-        {(gameState === "playing" || gameState === "over") && (
+        {(gameState === PLAYING || gameState === OVER) && (
           <div>
             <div className="score">Score: {sequence.length - 1}</div>
-            {gameState === "over" && (
+            {gameState === OVER && (
               <button className="try-again-btn" onClick={resetGame}>
                 Try Again
               </button>
